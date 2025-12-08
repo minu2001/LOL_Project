@@ -487,9 +487,9 @@ End에서는
 
 ## 📊 (2) CatBoost Feature Importance  
 **파일:** `feature_importance/<lane>_<phase>.png`  
-![ADC Early](visuals/importance_ADC_early.cbm.png)
-![ADC Late](visuals/importance_ADC_late.cbm.png)
-![ADC End](visuals/importance_ADC_end.cbm.png)
+![ADC Early](visuals/importance_TOP_early.cbm.png)
+![ADC Late](visuals/importance_TOP_late.cbm.png)
+![ADC End](visuals/importance_TOP_end.cbm.png)
 **이 그래프가 말하는 것**  
 - CatBoost가 실제로 어떤 피처의 중요도를 높게 평가했는지 보여준다.  
 - 사람이 준 manual weight가 실제 모델 구조와 충돌하는지/시너지가 나는지 확인 가능.  
@@ -551,7 +551,7 @@ ADC의 **Kills/min(분당 킬 기여)** 분포는
 
 ## 📊 (5) Match Curve (EWMA 시계열 기여도)  
 **파일:** `match_curve/match_<id>_ratio.png`  
-
+![Match Pair Curve](visualizations/match_pair_curve/match_curve.png)
 **이 그래프가 말하는 것**  
 - 해당 경기에서 각 라인이 시간대별로 얼마나 기여했는지 직관적으로 보여줌  
 - 오브젝트·갱킹·한타 타이밍이 기여도 그래프에 정확히 반영됨  
