@@ -1,7 +1,6 @@
 # 🎮 LOL Hybrid Project
 
 ------------------------------------
-<img src="visualizations/feature_definition_radar.png" width="600">
 ## 하이브리드 기여도 모델 (Manual Weight + CatBoost Residual)
 
 ## 1. 프로젝트 개요
@@ -483,6 +482,7 @@ End에서는
 
 ## 📊 (1) Feature Definition Radar  
 **파일:** `feature_definition_radar.png`  
+<img src="visualizations/feature_definition_radar.png" width="600">
 
 **이 그래프가 말하는 것**  
 - 라인별로 어떤 피처를 강조했는지 한눈에 보인다.  
@@ -503,7 +503,9 @@ End에서는
 
 ## 📊 (3) Feature Distribution Plot  
 **파일:** `distribution/<lane>_<feature>_boxplot.png`  
-
+![ADC Early](visuals/importance_ADC_early.cbm.png)
+![ADC Late](visuals/importance_ADC_late.cbm.png)
+![ADC End](visuals/importance_ADC_end.cbm.png)
 **이 그래프가 말하는 것**  
 - 라인별 분포 차이를 확인 가능  
 - 특정 피처가 편향되었는지(=왜 manual weight 적용이 필요했는지) 설명할 수 있음  
@@ -513,7 +515,7 @@ End에서는
 
 ## 📊 (4) Early vs Late Comparison  
 **파일:** `phase_comparison/early_vs_late_score.png`  
-
+![Early vs Late](visualizations/phase_comparison/early_vs_late_score.png)
 **이 그래프가 말하는 것**  
 - 각 플레이어가 초반형인지 후반형인지 즉시 파악 가능  
 - 정글·미드·서폿은 Early 기여가 높고 원딜은 Late 기여가 높은 정상적인 LoL 메타 구조가 드러남  
@@ -533,7 +535,7 @@ End에서는
 
 ## 📊 (6) Match Pair Curve (양 팀 라인 비교)  
 **파일:** `match_pair_curve/match_<id>.png`  
-
+![Match Pair Curve](visualizations/match_pair_curve/match_KR_7461719584_pair_comparison_final.png)
 **이 그래프가 말하는 것**  
 - 같은 시간대에 Blue/Mid vs Red/Mid 기여도 비교 가능  
 - 특정 시간 이후 어느 라인이 캐리했는지 명확히 드러남  
@@ -543,7 +545,7 @@ End에서는
 
 ## 📊 (7) PCA Cluster Map  
 **파일:** `clustering_pca/pca_cluster_map.png`  
-
+![PCA Cluster Map](visualizations/clustering_pca/pca_cluster_map.png)
 **이 그래프가 말하는 것**  
 - 플레이 스타일(안정형, 폭발형, 성장형 등)을 라벨 없이도 자연스럽게 클러스터링  
 - 시간대별 기여 패턴이 구조적으로 묶인다는 것을 확인  
@@ -563,7 +565,7 @@ End에서는
 
 ## 📊 (9) WinPrediction Analysis  
 **파일:** `win_prediction/win_prediction_analysis.png`  
-
+![Win Prediction Analysis](visualizations/win_prediction/win_prediction_analysis.png)
 **이 그래프가 말하는 것**  
 - 기여도 평균만으로도 승패 예측 기반이 형성됨  
 - OPScore가 단순 KDA보다 훨씬 승패와 상관관계 높음을 보여줌
