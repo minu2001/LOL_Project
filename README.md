@@ -1,4 +1,7 @@
-# 🎮 LOL Player Contribution Analysis
+# 🎮 LOL Hybrid Project
+
+------------------------------------
+
 ## 하이브리드 기여도 모델 (Manual Weight + CatBoost Residual)
 
 ## 1. 프로젝트 개요
