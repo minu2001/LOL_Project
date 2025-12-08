@@ -71,81 +71,118 @@ final_score_t = manual_score_t + catboost_residual_t
 ---
 
 ## 3. 라인별 Manual Feature 선정 이유
+ 라인별 Manual Feature 상세 설계
 
-### 🟦 공통 피처
-| 피처 | 이유 |
-|------|------|
-| cs per minute | 라인전 경쟁력 핵심 |
-| xp | 성장 속도 |
-| vision score | 맵 주도권 |
-| dpm | 후반 기여도 |
-| deaths | 생존 |
-| kill/assist | 직접 영향력 |
+본 모델은 **Early(0–15분) / Late(15분~) / End(종료 시점)** 3단계로 나누어 피처를 설계하며,  
+각 피처는 **특정 시점 Snapshot** 또는 **0분~해당 시점 누적(Aggregated)** 방식 중 하나로 계산된다.  
+또한 모든 피처는 **블루팀 vs 레드팀 격차(Blue – Red)** 로 구성된다.
 
 ---
 
-### 🟥 TOP
-| 피처 | 이유 |
-|------|------|
-| 솔로킬 | 라인전 실력 |
-| 포탑 방패 | 압박 |
-| turret takedown | 스플릿 성공 |
-| 스플릿 시간 | 매크로 |
-| 데스당 받은 피해량 | 탱킹 효율 |
+# 🟦  공통 피처 (All Lanes)
+
+| 피처 | 데이터 출처 | 계산 방식 | 시계열 범위 | 선택 이유 |
+|------|-------------|-----------|--------------|------------|
+| **CS 격차** | timeline.frames | minionsKilled 차이 | 특정 시점 Snapshot | 라인전 성장의 가장 기본 지표 |
+| **레벨 격차** | timeline.frames | level 차이 | Snapshot | 경험치 우위 = 전투력 우위 |
+| **킬/데스/어시 격차** | timeline.events | KDA 누적 차이 | 0~t분 누적 | 교전 결과가 스노우볼에 직결 |
+| **가한 피해량(DPM) 격차** | timeline.frames | damageToChampions 차이 | Snapshot | 포킹/교전 기여도 측정 |
+| **받은 피해량(Tanked) 격차** | timeline.frames | damageTaken 차이 | Snapshot | 탱킹·생존력 판단 |
+| **시야 점수(Vision Score) 격차** | timeline.frames | visionScore 차이 | Snapshot | 맵 장악·갱 방지 핵심 |
+| **CC 시간 격차** | timeline.frames | timeCCingOthers 차이 | Snapshot | 변수 창출 능력 |
+| **오브젝트 참여도** | timeline.events | objective kill/assist | 누적 | 경기 흐름을 결정하는 핵심 이벤트 |
 
 ---
 
-### 🟩 MID
-| 피처 | 이유 |
-|------|------|
-| 로밍 K+A | 판도 변화 |
-| 포탑 방패 | 라인전 우위 |
-| 시야 | 양 강가 관리 |
+# 🟥 TOP (탑)
+
+| 피처 | 데이터 출처 | 계산 방식 | 시계열 범위 | 선택 이유 |
+|------|-------------|-----------|--------------|------------|
+| **솔로킬** | timeline.events | soloKill 여부 차이 | 누적 | 순수 라인전 실력 반영 |
+| **포탑 방패** | timeline.events | turretPlateTaken | Snapshot/누적 | 라인전 우위가 경제력으로 연결 |
+| **스플릿 푸시 시간** | lane position | 직접 계산 | 누적 | 탑의 핵심 운영 역할 |
+| **탱킹 효율** | damageTaken vs death | 계산식 | Snapshot | 싸움을 여는 능력 측정 |
 
 ---
 
-### 🟫 JUNGLE
-| 피처 | 이유 |
-|------|------|
-| 오브젝트 | 실제 가치 |
-| 갱킹 K+A | 개입력 |
-| 갱 시도 | proactive |
-| 상대 정글 체류 | 압박 |
+# 🟩 MID (미드)
+
+| 피처 | 데이터 출처 | 계산 방식 | 시계열 범위 | 선택 이유 |
+|------|-------------|-----------|--------------|------------|
+| **로밍 킬/어시(K+A)** | timeline.events | 타 라인 교전 K+A | 누적 | 미드의 맵 영향력 |
+| **강가 시야 점수** | visionScore + 위치 | 직접 계산 | Snapshot | 양 강가 관리 책임 |
+| **포킹/웨이브 처리** | damage + cs | Snapshot | Snapshot | 라인전 압박·전략적 우위 |
 
 ---
 
-### 🟦 ADC
-| 피처 | 이유 |
-|------|------|
-| 킬당 받은 피해량 | 포지셔닝 |
-| 데스당 넣은 피해량 | 죽어도 딜 |
-| 팀파이트 딜량 | 캐리력 |
-| death timer | 후반 영향 |
+# 🟫 JUNGLE (정글)
+
+| 피처 | 데이터 출처 | 계산 방식 | 시계열 범위 | 선택 이유 |
+|------|-------------|-----------|--------------|------------|
+| **오브젝트 참여도** | timeline.events | dragon/baron/herald kill/assist | 누적 | 정글 기여도의 핵심 |
+| **갱킹 성공 지표(K+A)** | timeline.events | 갱킹 발생 K+A | 누적 | 라인 스노우볼 영향 |
+| **카정 체류 시간** | jungle position | 직접 계산 | 누적 | 상대 정글 압박 지표 |
+| **정글 몬스터 격차** | timeline.frames | jungleMinionsKilled 차이 | Snapshot | 정글 성장의 기본 척도 |
 
 ---
 
-### 🟪 SUPPORT  
-**공통**
-- 시야  
-- 제어 와드  
-- assist  
-- roam  
-- CC 기여시간  
+# 🟦 ADC (원딜)
 
-**Enchanter**
-- heal/shield  
-
-**Tank**
-- 데스당 피격량  
-- CC 맞춘 횟수  
-
-**Mage**
-- DPM  
-
-**Assassin**
-- pick/발견 능력  
+| 피처 | 데이터 출처 | 계산 방식 | 시계열 범위 | 선택 이유 |
+|------|-------------|-----------|--------------|------------|
+| **포지셔닝 지표** | damageTaken vs distance | 계산식 | Snapshot | 후반 생존이 팀 승패 좌우 |
+| **팀파이트 DPM** | damageStats | 챔피언 피해량 | Snapshot | 캐리력 핵심 지표 |
+| **생존 기반 영향력** | death timer + dpm | 계산식 | Snapshot | 죽는 순간 전체 라인에 영향 |
 
 ---
+
+# 🟪 SUPPORT (서포터) — 역할군 4종 세분화
+
+서포터는 역할군이 다양하여 단일 피처셋으로 기여도를 설명하기 어렵다.  
+따라서 **Enchanter / Tank / Mage / Assassin** 4개 역할군으로 분류하여 피처를 설계했다.
+
+---
+
+## 🔵 Enchanter (유틸형 서포터)
+
+| 피처 | 데이터 출처 | 선택 이유 |
+|------|-------------|------------|
+| **힐/쉴드량** | match.stats | 유지력 핵심 |
+| **시야 점수** | timeline.frames | 유틸 서폿의 주요 역할 |
+| **로밍 보조 기여** | events | 라인 영향력 확장 |
+
+---
+
+## 🛡 Tank Support (탱커형)
+
+| 피처 | 데이터 출처 | 선택 이유 |
+|------|-------------|------------|
+| **CC 적중 횟수** | CCingOthers | 이니시·변수 창출 핵심 |
+| **탱킹 효율** | damageTaken | 맞아주는 능력 |
+| **로밍 존재감** | path tracking | 교전 설계 기여 |
+
+---
+
+## 🔥 Mage Support (딜서폿)
+
+| 피처 | 데이터 출처 | 선택 이유 |
+|------|-------------|------------|
+| **포킹 피해량** | damageStats | 라인전 압박 핵심 |
+| **견제 성공도** | damage exchanges | 체력 우위 확보 |
+| **시야 기여도** | visionScore | 안정적 포킹 기반 |
+
+---
+
+## 🗡 Assassin Support (픽형)
+
+| 피처 | 데이터 출처 | 선택 이유 |
+|------|-------------|------------|
+| **픽 기여도** | kill events | 적 잘라먹기 능력 |
+| **이니시 기여도** | CC events | 교전 개시 지표 |
+| **로밍 성공률** | roaming events | 초중반 변수 생성 능력 |
+
+---
+
 
 ## 4. 전체 Pipeline 구조
 
