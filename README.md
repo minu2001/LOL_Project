@@ -493,7 +493,9 @@ End에서는
 
 ## 📊 (2) CatBoost Feature Importance  
 **파일:** `feature_importance/<lane>_<phase>.png`  
-
+![ADC Early](visuals/importance_ADC_early.cbm.png)
+![ADC Late](visuals/importance_ADC_late.cbm.png)
+![ADC End](visuals/importance_ADC_end.cbm.png)
 **이 그래프가 말하는 것**  
 - CatBoost가 실제로 어떤 피처의 중요도를 높게 평가했는지 보여준다.  
 - 사람이 준 manual weight가 실제 모델 구조와 충돌하는지/시너지가 나는지 확인 가능.  
@@ -503,9 +505,7 @@ End에서는
 
 ## 📊 (3) Feature Distribution Plot  
 **파일:** `distribution/<lane>_<feature>_boxplot.png`  
-![ADC Early](visuals/importance_ADC_early.cbm.png)
-![ADC Late](visuals/importance_ADC_late.cbm.png)
-![ADC End](visuals/importance_ADC_end.cbm.png)
+![Feature Distribution](visualizations/distribution/ADC_kills_per_min_boxplot.png)
 **이 그래프가 말하는 것**  
 - 라인별 분포 차이를 확인 가능  
 - 특정 피처가 편향되었는지(=왜 manual weight 적용이 필요했는지) 설명할 수 있음  
