@@ -1,7 +1,7 @@
 # 🎮 LOL Hybrid Project
 
 ------------------------------------
-
+<img src="visualizations/feature_definition_radar.png" width="600">
 ## 하이브리드 기여도 모델 (Manual Weight + CatBoost Residual)
 
 ## 1. 프로젝트 개요
