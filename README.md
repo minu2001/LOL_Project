@@ -599,7 +599,7 @@ ADC의 **Kills/min(분당 킬 기여)** 분포는
 
 ## 📊 (5) Match Curve (EWMA 시계열 기여도)  
 **파일:** `match_curve/match_<id>_ratio.png`  
-![Match Pair Curve](visualizations/match_pair_curve/match_curve.png)
+![Match Pair Curve](visualizations/match_curve.png)
 **이 그래프가 말하는 것**  
 - 해당 경기에서 각 라인이 시간대별로 얼마나 기여했는지 직관적으로 보여줌  
 - 오브젝트·갱킹·한타 타이밍이 기여도 그래프에 정확히 반영됨  
