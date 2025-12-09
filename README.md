@@ -74,8 +74,6 @@ Raw JSON
 JSON 예시 형태:
 { "matchId": "KR_12345", "kills": 5, "deaths": 2 }
 
----
-
 ### Parquet (바이너리 기반, **열(column) 지향 저장 방식**)  
 - 기계 처리에 최적화된 Columnar Format(열 지향)  
 - 필요한 컬럼만 선택해서 읽기 가능 → 매우 빠름  
@@ -84,16 +82,15 @@ JSON 예시 형태:
 - 반복 로딩이 많은 머신러닝 파이프라인에서 특히 유리함  
 
 Parquet 개념적 구조:
-Column: matchId | KR_12345 | KR_99999 | ...  
-Column: kills   | 5        | 3        | ...  
-Column: deaths  | 2        | 6        | ...  
+Column: matchId | KR_12345 | KR_99999 | ...
+Column: kills   | 5        | 3        | ...
+Column: deaths  | 2        | 6        | ...
 
----
 
 ### 한 줄 요약
 Parquet은 **열 단위 저장 + 빠른 속도 + 작은 용량 + 안정적 스키마** 덕분에  
 대규모 LoL 데이터 처리와 머신러닝 파이프라인에 최적화된 형식이다.
-
+---
 ### (1) 라인 확정
 - match.json의 participantId 기반으로 lane 확정
 
