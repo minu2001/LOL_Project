@@ -50,7 +50,7 @@
 ---
 
 ###  데이터 구조 및 전체 파이프라인
-
+데이터 약 38000게임
 ```
 timeline.json → minute-level transform  
  → early/late/end 분할  
