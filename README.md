@@ -52,14 +52,47 @@
 ###  데이터 구조 및 전체 파이프라인
 데이터 약 38000게임
 ```
-timeline.json → minute-level transform  
- → early/late/end 분할  
- → lane-role classification  
- → manual weights 적용  
- → CatBoost train  
- → prediction merge  
- → final OPScore-like contribution score
+Raw JSON 
+→ Parquet 변환
+→ 라인/서포터 역할군 자동 분류
+→ 라인별 Feature Engineering
+→ Early/Late/End 데이터셋 생성
+→ Challenger 기반 정규화
+→ CatBoost 모델 학습
+→ 시간대별 기여도/OPScore 산출
+→ 군집/시계열/승패예측 시각화
 ```
+## 📌 JSON vs Parquet 비교 (왜 Parquet을 사용하는가?)
+
+### JSON (텍스트 기반, 행(row) 지향 저장 방식)
+- 사람이 읽기 쉬운 텍스트 구조  
+- 행(row) 단위로 저장됨  
+- 구조가 중첩(nested)되어 있어 처리 복잡  
+- 파일을 읽을 때마다 문자열 파싱 필요 → 느림  
+- 컬럼 타입 불일치나 누락 등 전처리 오류가 자주 발생함  
+
+JSON 예시 형태:
+{ "matchId": "KR_12345", "kills": 5, "deaths": 2 }
+
+---
+
+### Parquet (바이너리 기반, **열(column) 지향 저장 방식**)  
+- 기계 처리에 최적화된 Columnar Format(열 지향)  
+- 필요한 컬럼만 선택해서 읽기 가능 → 매우 빠름  
+- 스키마(컬럼 타입)가 고정되어 안정적  
+- 내부 압축 적용 → JSON 대비 3~10배 용량 절감  
+- 반복 로딩이 많은 머신러닝 파이프라인에서 특히 유리함  
+
+Parquet 개념적 구조:
+Column: matchId | KR_12345 | KR_99999 | ...  
+Column: kills   | 5        | 3        | ...  
+Column: deaths  | 2        | 6        | ...  
+
+---
+
+### 한 줄 요약
+Parquet은 **열 단위 저장 + 빠른 속도 + 작은 용량 + 안정적 스키마** 덕분에  
+대규모 LoL 데이터 처리와 머신러닝 파이프라인에 최적화된 형식이다.
 
 ### (1) 라인 확정
 - match.json의 participantId 기반으로 lane 확정
